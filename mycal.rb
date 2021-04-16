@@ -68,3 +68,4 @@ dates.each do |date|
     print each_day = date.day.to_s.center(3)
   end
 end
+
