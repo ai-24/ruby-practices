@@ -12,14 +12,10 @@ year = today.year
 opts = OptionParser.new
 opts.on("-m [OPTIONAL]") do |m|
   month = m.to_i
-  dates = (Date.new(year,month,1)..Date.new(year,month,-1))
-  last_day_of_month = Date.new(year,month,-1)
 end
 
 opts.on("-y [OPTIONAL]") do |y|
   year = y.to_i
-  dates = (Date.new(year,month,1)..Date.new(year,month,-1))
-  last_day_of_month = Date.new(year,month,-1)
 end
 
 opts.parse!
@@ -36,7 +32,7 @@ days_of_week.each do |day_of_week|
     puts days_of_week_ja[day_of_week]
   end
   break if day_of_week == 6
-    print days_of_week_ja[day_of_week]
+  print days_of_week_ja[day_of_week]
 end
 
 #日の作成
