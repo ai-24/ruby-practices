@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require "date"
 require "optparse/date"
 
@@ -14,7 +16,7 @@ opts.on("-m [OPTIONAL]") do |m|
   last_day_of_month = Date.new(year,month,-1)
 end
 
-opts.on("-y {OPTIONAL]") do |y|
+opts.on("-y [OPTIONAL]") do |y|
   year = y.to_i
   dates = (Date.new(year,month,1)..Date.new(year,month,-1))
   last_day_of_month = Date.new(year,month,-1)
@@ -44,28 +46,15 @@ dates.to_a
 
 dates.each do |date|
   add = "   "
-  each_day = date.day.to_s.center(3)
-  
-  case
-  when date.day == 1.to_i&& date.monday?
-    print add + each_day
-  when date.day == 1.to_i&&date.tuesday?
-    print add*2 + each_day
-  when date.day == 1.to_i&&date.wednesday?
-    print add*3 + each_day
-  when date.day == 1.to_i&&date.thursday?
-    print add*4 + each_day
-  when date.day == 1.to_i&&date.friday?
-    print add*5 + each_day
-  when date.day == 1.to_i&&date.saturday?
-    puts add*6 + each_day
-  when date.day == 1.to_i&&date.sunday?
-    print each_day
-  when date.saturday? || date == last_day_of_month 
-    puts each_day = date.day.to_s.center(3)
-  next if date.saturday? || date == last_day_of_month
+  if date.day==1 && date.saturday?
+    each_day = add*date.wday
+    puts each_day + date.day.to_s.center(3)
+  elsif date.day==1 
+    each_day = add*date.wday
+    print each_day + date.day.to_s.center(3)
+  elsif date.saturday? || date == last_day_of_month 
+    puts date.day.to_s.center(3)
   else
-    print each_day = date.day.to_s.center(3)
+    print date.day.to_s.center(3)
   end
 end
-
