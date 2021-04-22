@@ -10,8 +10,6 @@ year = today.year
 opts = OptionParser.new
 opts.on("-m [OPTIONAL]") do |m|
   month = m.to_i
-  dates = (Date.new(year,month,1)..Date.new(year,month,-1))
-  last_day_of_month = Date.new(year,month,-1)
 end
 
 opts.on("-y {OPTIONAL]") do |y|
