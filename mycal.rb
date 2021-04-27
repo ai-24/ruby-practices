@@ -38,17 +38,12 @@ end
 #日の作成
 dates = Date.new(year,month,1)..Date.new(year,month,-1)
 last_day_of_month = Date.new(year,month,-1)
-dates.to_a
+
+add = "   "
+print add*dates.first.wday
 
 dates.each do |date|
-  add = "   "
-  if date.day==1 && date.saturday?
-    each_day = add*date.wday
-    puts each_day + date.day.to_s.center(3)
-  elsif date.day==1 
-    each_day = add*date.wday
-    print each_day + date.day.to_s.center(3)
-  elsif date.saturday? || date == last_day_of_month 
+  if date.saturday? || date == last_day_of_month 
     puts date.day.to_s.center(3)
   else
     print date.day.to_s.center(3)
