@@ -24,16 +24,8 @@ opts.parse!
 puts "#{month}月 #{year}".center(20)
 
 #曜日を作成
-days_of_week = (0..6).to_a
-days_of_week_ja = ["日 ","月 ","火 ","水 ","木 ","金 ","土"]
-
-days_of_week.each do |day_of_week|
-  if day_of_week == 6
-    puts days_of_week_ja[day_of_week]
-  end
-  break if day_of_week == 6
-  print days_of_week_ja[day_of_week]
-end
+days_of_week_ja = ["日","月","火","水","木","金","土"]
+puts days_of_week_ja.join(' ')
 
 #日の作成
 dates = Date.new(year,month,1)..Date.new(year,month,-1)
