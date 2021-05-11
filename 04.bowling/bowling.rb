@@ -12,36 +12,36 @@ scores.each do |s|
   end
 end
 
-frames = []
-shots.each_slice(2) do |s|
+frames = shots.each_slice(2).to_a do |s|
   frames << s
 end
 
-point = 0
-frames.each_with_index do |frame, i|
+
+point = frames.each_with_index.sum do |frame, i|
+  #require 'byebug';byebug
+
+  break if frame == frames[-1]
+
   if frame[0] == 10
-    break if i > 9
+    next 0 if i > 9
 
-    i += 1
-    extra_point = frames[i]
-    break if extra_point.nil?
+    extra_point = frames[i.next]
+    next 0 if extra_point.nil?
 
-    point += frame.sum + extra_point.sum
+    frame_point = frame.sum + extra_point.sum
     if extra_point[0] == 10
-      i += 1
-      double_extra_point = frames[i]
-      break if double_extra_point.nil?
+      double_extra_point = frames[i.next.next]
+      next 0 if double_extra_point.nil?
 
-      point += double_extra_point[0]
+      frame_point + double_extra_point[0]
     end
-  elsif frame.sum == 10 && frame != frames[-1]
-    i += 1
-    extra_point = frames[i]
-    point += frame.sum + extra_point[0]
+  elsif frame.sum == 10
+    extra_point = frames[i.next]
+    frame.sum + extra_point[0]
   else
-    break if frame == frames[-1] && frames.size > 10
+    next 0 if frames.size > 10
 
-    point += frame.sum
+    frame.sum
   end
 end
 
