@@ -3,18 +3,18 @@
 require 'optparse'
 require 'etc'
 
-class Puts
-  def self.number(list)
+class Print
+  def self.sorting(list)
     list_size = list.size / 3
-    extra_list = list.size % 3
-    length = extra_list != 0 ? list_size + 1 : list_size
+    extra_list_size = list.size % 3
+    length = extra_list_size != 0 ? list_size + 1 : list_size
     numbers = [0, length, length * 2]
     numbers.last(3).each { |n| numbers << n.next } while numbers.size < list.size
     numbers.each_slice(3).map { |n| n }
   end
 
   def self.put(list)
-    array_number = Puts.number(list)
+    array_number = Print.sorting(list)
     amount = array_number.count
     if amount > 1
       array_number[0..amount].each do |a|
@@ -30,18 +30,18 @@ class Puts
 end
 
 def current_lists
-  Dir.glob('*').sort.map { |list| list }
+  Dir.glob('*').sort.map { |l| l }
 end
 
-def option_a
+def current_lists_all
   Dir.glob(['.*', '*']).sort.map { |list| list }
 end
 
 def option_r(o_r)
   if o_r.size > 1
-    Puts.put o_r.reverse
+    Print.put o_r.reverse
   else
-    Puts.put o_r
+    Print.put o_r
   end
 end
 
@@ -113,27 +113,19 @@ class OptL
   end
 end
 
-o = OptionParser.new
-o.on('-a [OPTIONAL]') { |v| }
-o.on('-l [OPTIONAL]') { |v| }
-o.on('-r [OPTIONAL]') { |v| }
-
-opts = ARGV.getopts('a', 'l', 'r')
-if opts['a'] && opts['l'] && opts['r']
-  OptL.option_l(option_a.reverse)
-elsif opts['a'] && opts['l']
-  OptL.option_l(option_a)
-elsif opts['a'] && opts['r']
-  option_r(option_a)
-elsif opts['l'] && opts['r']
-  OptL.option_l(current_lists.reverse)
-elsif opts['a']
-  Puts.put option_a
-elsif opts['l']
-  OptL.option_l(current_lists)
-elsif opts['r']
-  option_r(current_lists)
-elsif ARGV.size.zero?
-  Puts.put(current_lists)
+@option = {}
+OptionParser.new do |opt|
+  opt.on('-a') { |v| @option[:a] = v }
+  opt.on('-r') { |v| @option[:r] = v }
+  opt.on('-l') { |v| @option[:l] = v }
+  opt.parse!(ARGV)
 end
-o.parse!(ARGV)
+
+option_all = @option[:a] ? current_lists_all : current_lists
+if @option[:l] && @option[:r]
+  OptL.option_l(option_all.reverse)
+elsif @option[:l]
+  OptL.option_l(option_all)
+end
+Print.put option_all.reverse if @option[:r] && @option[:l].nil?
+Print.put option_all unless @option[:l] || @option[:r]
