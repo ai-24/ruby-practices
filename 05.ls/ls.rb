@@ -26,8 +26,8 @@ class Printer
     else
       puts list[0]
     end
-    end
   end
+end
 
 def current_lists
   Dir.glob('*').sort.map { |l| l }
@@ -102,8 +102,8 @@ class OptL
       print OptL.lstat(ol).mtime.strftime(' %b %e %H:%M ')
       OptL.symlink(ol)
     end
-    end
   end
+end
 
 @option = {}
 OptionParser.new do |opt|
@@ -113,18 +113,13 @@ OptionParser.new do |opt|
   opt.parse!(ARGV)
 end
 
-lists_result = @option[:a] ? current_lists_all : current_lists
-if @option.size == 1 && @option[:a]
-  Printer.put lists_result
-elsif @option.size == 0
-  Printer.put lists_result
-end
-lists_result_reverse = lists_result.reverse if @option[:r]
-if @option.size == 1 && @option[:r]
-  Printer.put lists_result_reverse
-end
+fetched_files = @option[:a] ? current_lists_all : current_lists
+fetched_files_sort = @option[:r] ? fetched_files.reverse : fetched_files
+
 if @option[:l] && @option[:r]
-  OptL.option_l(lists_result_reverse)
+  OptL.option_l(fetched_files_sort)
 elsif @option[:l]
-  OptL.option_l(lists_result)
+  OptL.option_l(fetched_files)
+else
+  Printer.put fetched_files_sort
 end
