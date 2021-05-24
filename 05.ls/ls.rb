@@ -3,7 +3,7 @@
 require 'optparse'
 require 'etc'
 
-class Print
+class Printer
   def self.sorting(list)
     list_size = list.size / 3
     extra_list_size = list.size % 3
@@ -14,7 +14,7 @@ class Print
   end
 
   def self.put(list)
-    array_number = Print.sorting(list)
+    array_number = Printer.sorting(list)
     amount = array_number.count
     if amount > 1
       array_number[0..amount].each do |a|
@@ -26,8 +26,8 @@ class Print
     else
       puts list[0]
     end
+    end
   end
-end
 
 def current_lists
   Dir.glob('*').sort.map { |l| l }
@@ -35,14 +35,6 @@ end
 
 def current_lists_all
   Dir.glob(['.*', '*']).sort.map { |list| list }
-end
-
-def option_r(o_r)
-  if o_r.size > 1
-    Print.put o_r.reverse
-  else
-    Print.put o_r
-  end
 end
 
 class OptL
@@ -110,8 +102,8 @@ class OptL
       print OptL.lstat(ol).mtime.strftime(' %b %e %H:%M ')
       OptL.symlink(ol)
     end
+    end
   end
-end
 
 @option = {}
 OptionParser.new do |opt|
@@ -121,11 +113,18 @@ OptionParser.new do |opt|
   opt.parse!(ARGV)
 end
 
-option_all = @option[:a] ? current_lists_all : current_lists
-if @option[:l] && @option[:r]
-  OptL.option_l(option_all.reverse)
-elsif @option[:l]
-  OptL.option_l(option_all)
+lists_result = @option[:a] ? current_lists_all : current_lists
+if @option.size == 1 && @option[:a]
+  Printer.put lists_result
+elsif @option.size == 0
+  Printer.put lists_result
 end
-Print.put option_all.reverse if @option[:r] && @option[:l].nil?
-Print.put option_all unless @option[:l] || @option[:r]
+lists_result_reverse = lists_result.reverse if @option[:r]
+if @option.size == 1 && @option[:r]
+  Printer.put lists_result_reverse
+end
+if @option[:l] && @option[:r]
+  OptL.option_l(lists_result_reverse)
+elsif @option[:l]
+  OptL.option_l(lists_result)
+end
