@@ -16,32 +16,21 @@ frames = shots.each_slice(2).to_a do |s|
   frames << s
 end
 
-
 point = frames.each_with_index.sum do |frame, i|
-  #require 'byebug';byebug
-
-  break if frame == frames[-1]
-
-  if frame[0] == 10
-    next 0 if i > 9
-
+  if i > 8 || frame.sum < 10
+    frame.sum
+  elsif frame[0] == 10
     extra_point = frames[i.next]
-    next 0 if extra_point.nil?
-
     frame_point = frame.sum + extra_point.sum
     if extra_point[0] == 10
       double_extra_point = frames[i.next.next]
-      next 0 if double_extra_point.nil?
-
       frame_point + double_extra_point[0]
+    else
+      frame_point
     end
   elsif frame.sum == 10
     extra_point = frames[i.next]
     frame.sum + extra_point[0]
-  else
-    next 0 if frames.size > 10
-
-    frame.sum
   end
 end
 
