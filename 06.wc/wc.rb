@@ -11,7 +11,7 @@ def name(arg)
 end
 
 def read(arg)
-  File.open(arg).read
+  File.read(arg)
 end
 
 def lines(arg)
@@ -25,54 +25,45 @@ def words(arg)
   /[^\s\n]\z/.match?(arg) ? count_words + 1 : count_words
 end
 
-def bytesize(arg)
-  arg.bytesize
-end
-
 def lines_total
-  ARGV.map do |arg|
+  ARGV.sum do |arg|
     argv = read(arg)
     lines(argv)
   end
 end
 
-if opts['l']
+if ARGV.size.positive?
   ARGV.each do |arg|
     read = read(arg)
     printf('%8d', lines(read))
+    if opts['l'] == false
+      printf('%8d', words(read))
+      printf('%8d', read.bytesize)
+    end
     name(arg)
   end
-  if ARGV.size > 1
-    printf('%8d', lines_total.sum)
+  if opts['l'] && ARGV.size > 1
+    printf('%8d', lines_total)
     puts ' total'
-  end
-elsif ARGV.size.positive?
-  ARGV.each do |arg|
-    read = read(arg)
-    printf('%8d', lines(read))
-    printf('%8d', words(read))
-    printf('%8d', bytesize(read))
-    name(arg)
-  end
-  if ARGV.size > 1
-    printf('%8d', lines_total.sum)
-    words_total = ARGV.map do |arg|
+  elsif opts['l'] == false && ARGV.size > 1
+    printf('%8d', lines_total)
+    words_total = ARGV.sum do |arg|
       argv = read(arg)
       words(argv)
     end
-    printf('%8d', words_total.sum)
-    bytesize_total = ARGV.map do |arg|
+    printf('%8d', words_total)
+    bytesize_total = ARGV.sum do |arg|
       argv = read(arg)
-      bytesize(argv)
+      argv.bytesize
     end
-    printf('%8d', bytesize_total.sum)
+    printf('%8d', bytesize_total)
     puts ' total'
   end
-elsif ARGV.empty?
+else
   pipe = $stdin.read
   printf('%8d', lines(pipe))
   printf('%8d', words(pipe))
-  puts bytesize(pipe).to_s.rjust(8)
+  puts pipe.bytesize.to_s.rjust(8)
 end
 
 opt.parse!
