@@ -114,12 +114,10 @@ OptionParser.new do |opt|
 end
 
 fetched_files = @option[:a] ? current_lists_all : current_lists
-fetched_files_sort = @option[:r] ? fetched_files.reverse : fetched_files
+sorted_files = @option[:r] ? fetched_files.reverse : fetched_files
 
-if @option[:l] && @option[:r]
-  OptL.option_l(fetched_files_sort)
-elsif @option[:l]
-  OptL.option_l(fetched_files)
+if @option[:l]
+  OptL.option_l(sorted_files)
 else
-  Printer.put fetched_files_sort
+  Printer.put sorted_files
 end
