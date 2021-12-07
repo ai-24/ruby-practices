@@ -3,7 +3,7 @@
 require './shot'
 
 class Frame < Shot
-  attr_reader :first_shot, :second_shot
+  attr_reader :first_shot
 
   def initialize(first_mark, second_mark = nil)
     @first_shot = Shot.new(first_mark)

@@ -3,8 +3,6 @@
 require './frame'
 
 class Game < Frame
-  attr_reader :game
-
   def initialize(game)
     @game = game
   end
@@ -19,7 +17,7 @@ class Game < Frame
     split.each_slice(2).to_a
   end
 
-  def total_score
+  def final_calculate
     frame.each_with_index.sum do |f, i|
       basic_score = Frame.new(*f).calculate
       if i > 8 || basic_score < 10
@@ -39,4 +37,4 @@ class Game < Frame
 end
 
 g = Game.new(ARGV[0])
-puts g.total_score
+puts g.final_calculate
