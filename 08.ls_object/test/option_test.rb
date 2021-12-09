@@ -15,7 +15,7 @@ class OptionTest < Minitest::Test
   end
 
   def test_derive
-    assert_equal ['list_test.rb', 'option_long_test.rb', 'option_test.rb', 'test1@ -> option_test.rb'], @file_lists.map { |list| @option.derive(list) }
+    assert_equal(['list_test.rb', 'option_long_test.rb', 'option_test.rb', 'test1@ -> option_test.rb'], @file_lists.map { |list| @option.derive(list) })
   end
 
   def test_classify
