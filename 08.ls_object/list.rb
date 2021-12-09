@@ -9,7 +9,7 @@ class List
     Dir.glob(%w[.* *])
   end
 
-  def divide(lists)
+  def adjust(lists)
     if (lists.count % 3).zero?
       new_lists = lists
     else

@@ -3,6 +3,7 @@
 require_relative './list'
 require 'optparse'
 require 'etc'
+require 'date'
 
 class Option < List
   def self.inform
@@ -48,16 +49,23 @@ class Option < List
     end
   end
 
+  def export(file)
+    renewed_time = File.lstat(file).mtime
+    file_date = Date.parse(renewed_time.strftime(' %b %e %H:%M %Y '))
+    six_month_before = Date.today << 6
+    file_date > six_month_before ? renewed_time.strftime(' %b %e %H:%M ') : renewed_time.strftime(' %b %e  %Y ')
+  end
+
   def print_long(files)
     puts("total #{calculate_block(files)}")
     files.each do |file|
       print classify(file)
       print authorize(file).join
-      print("  #{File.lstat(file).nlink} ")
+      print("  #{File.lstat(file).nlink.to_s.rjust(3)} ")
       print("#{Etc.getpwuid(File.lstat(file).uid).name} ")
       print(" #{Etc.getgrgid(File.lstat(file).gid).name}")
       printf('%6d', File.lstat(file).size)
-      print File.lstat(file).mtime.strftime(' %b %e %H:%M ')
+      print export(file)
       puts derive(file)
     end
   end
@@ -72,5 +80,5 @@ end
 selected = Option.inform
 result = selected[:a] ? @list.list_all : @list.list
 sorted_lists = selected[:r] ? @option_object.print_reverse(result) : result
-selected[:l] ? @option_object.print_long(sorted_lists) : final_result = @option_object.divide(sorted_lists)
+selected[:l] ? @option_object.print_long(sorted_lists) : final_result = @option_object.adjust(sorted_lists)
 @list.display(*final_result)

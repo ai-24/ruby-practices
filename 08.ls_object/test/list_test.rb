@@ -16,8 +16,8 @@ class ListTest < Minitest::Test
     assert_equal %w[. .. .gitkeep empty.rb fake.rb list.rb option.rb test], @lists.list_all
   end
 
-  def test_divide
-    assert_equal [[1, 4, 7], [2, 5, 8], [3, 6, 9]], @lists.divide([1, 2, 3, 4, 5, 6, 7, 8, 9])
-    assert_equal [[1, 3, 5], [2, 4]], @lists.divide([1, 2, 3, 4, 5])
+  def test_adjust
+    assert_equal [[1, 4, 7], [2, 5, 8], [3, 6, 9]], @lists.adjust([1, 2, 3, 4, 5, 6, 7, 8, 9])
+    assert_equal [[1, 3, 5], [2, 4]], @lists.adjust([1, 2, 3, 4, 5])
   end
 end
