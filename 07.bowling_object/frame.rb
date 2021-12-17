@@ -2,7 +2,7 @@
 
 require './shot'
 
-class Frame < Shot
+class Frame
   attr_reader :first_shot
 
   def initialize(first_mark, second_mark = nil)
@@ -10,7 +10,7 @@ class Frame < Shot
     @second_shot = Shot.new(second_mark)
   end
 
-  def calculate
+  def frame_sum
     [@first_shot, @second_shot].map(&:score).sum
   end
 end

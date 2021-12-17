@@ -1,11 +1,33 @@
 # frozen_string_literal: true
 
 require './frame'
+require './shot'
 
-class Game < Frame
+class Game
   def initialize(game)
     @game = game
   end
+
+  def final_calculate
+    frame.each_with_index.sum do |f, i|
+      basic_score = f.frame_sum
+      next_frame = frame[i.next]
+      if i > 8 || basic_score < 10
+        basic_score
+      elsif f.first_shot.score == 10
+        frame_point = basic_score + next_frame.frame_sum
+        if next_frame.first_shot.score == 10
+          frame_point + frame[i.next.next].first_shot.score
+        else
+          frame_point
+        end
+      elsif basic_score == 10
+        basic_score + next_frame.first_shot.score
+      end
+    end
+  end
+
+  private
 
   def split
     numbers = []
@@ -14,25 +36,8 @@ class Game < Frame
   end
 
   def frame
-    split.each_slice(2).to_a
-  end
-
-  def final_calculate
-    frame.each_with_index.sum do |f, i|
-      basic_score = Frame.new(*f).calculate
-      if i > 8 || basic_score < 10
-        basic_score
-      elsif f[0] == 'X'
-        frame_point = basic_score + Frame.new(*frame[i.next]).calculate
-        if frame[i.next][0] == 'X'
-          frame_point + Frame.new(*frame[i.next.next]).first_shot.score
-        else
-          frame_point
-        end
-      elsif basic_score == 10
-        basic_score + Frame.new(*frame[i.next]).first_shot.score
-      end
-    end
+    frames = split.each_slice(2).to_a
+    frames.map { |frame| Frame.new(*frame) }
   end
 end
 
