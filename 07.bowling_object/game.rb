@@ -16,11 +16,7 @@ class Game
         basic_score
       elsif f.first_shot.score == 10
         frame_point = basic_score + next_frame.frame_sum
-        if next_frame.first_shot.score == 10
-          frame_point + frame[i.next.next].first_shot.score
-        else
-          frame_point
-        end
+        triple_point?(next_frame: next_frame, extra_point: frame_point, another_frame: frame[i.next.next])
       elsif basic_score == 10
         basic_score + next_frame.first_shot.score
       end
@@ -38,6 +34,14 @@ class Game
   def frame
     frames = split.each_slice(2).to_a
     frames.map { |frame| Frame.new(*frame) }
+  end
+
+  def triple_point?(next_frame:, extra_point:, another_frame:)
+    if next_frame.first_shot.score == 10
+      extra_point + another_frame.first_shot.score
+    else
+      extra_point
+    end
   end
 end
 
