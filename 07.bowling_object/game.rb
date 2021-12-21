@@ -1,23 +1,25 @@
 # frozen_string_literal: true
 
-require './frame'
-require './shot'
+require_relative 'frame'
+require_relative 'shot'
 
 class Game
+  ALL_PINS = 10
+  NINE_FRAME = 8
   def initialize(game)
     @game = game
   end
 
   def final_calculate
-    frame.each_with_index.sum do |f, i|
+    frames.each_with_index.sum do |f, i|
       basic_score = f.frame_sum
-      next_frame = frame[i.next]
-      if i > 8 || basic_score < 10
+      next_frame = frames[i.next]
+      if i > NINE_FRAME || basic_score < ALL_PINS
         basic_score
-      elsif f.first_shot.score == 10
+      elsif f.strike?
         frame_point = basic_score + next_frame.frame_sum
-        triple_point?(next_frame: next_frame, extra_point: frame_point, another_frame: frame[i.next.next])
-      elsif basic_score == 10
+        next_frame.strike? ? frame_point + frames[i.next.next].first_shot.score : frame_point
+      elsif f.spare?
         basic_score + next_frame.first_shot.score
       end
     end
@@ -31,19 +33,8 @@ class Game
     numbers
   end
 
-  def frame
+  def frames
     frames = split.each_slice(2).to_a
     frames.map { |frame| Frame.new(*frame) }
   end
-
-  def triple_point?(next_frame:, extra_point:, another_frame:)
-    if next_frame.first_shot.score == 10
-      extra_point + another_frame.first_shot.score
-    else
-      extra_point
-    end
-  end
 end
-
-g = Game.new(ARGV[0])
-puts g.final_calculate
