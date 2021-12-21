@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class List
+  ROW = 3
   def list
     Dir.glob('*')
   end
@@ -10,12 +11,12 @@ class List
   end
 
   def adjust(lists)
-    if (lists.count % 3).zero?
+    if (lists.count % ROW).zero?
       new_lists = lists
     else
-      new_lists = lists.push(nil) until (lists.count % 3).zero?
+      new_lists = lists.push(nil) until (lists.count % ROW).zero?
     end
-    new_lists.each_slice(new_lists.count / 3).to_a.transpose
+    new_lists.each_slice(new_lists.count / ROW).to_a.transpose
   end
 
   def display(*arrays)

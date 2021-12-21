@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './list'
+require_relative 'list'
 require 'optparse'
 require 'etc'
 require 'date'
@@ -76,11 +76,3 @@ class Option
     end
   end
 end
-
-@option_object = Option.new
-@list = List.new
-selected = Option.inform
-result = selected[:a] ? @list.list_all : @list.list
-sorted_lists = selected[:r] ? @option_object.print_reverse(result) : result
-selected[:l] ? @option_object.print_long(sorted_lists) : final_result = @option_object.adjust(sorted_lists)
-@list.display(*final_result)
