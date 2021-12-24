@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'option'
-require_relative 'list'
+require_relative '../lib/option'
+require_relative '../lib/list'
 
 @option_object = Option.new
 @list = List.new

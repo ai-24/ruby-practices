@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative '../list'
+require_relative '../lib/list'
 
 class ListTest < Minitest::Test
   def setup
@@ -9,11 +9,11 @@ class ListTest < Minitest::Test
   end
 
   def test_list
-    assert_equal %w[empty.rb fake.rb list.rb ls_object.rb option.rb test], @lists.list
+    assert_equal %w[bin empty.rb fake.rb lib test], @lists.list
   end
 
   def test_list_all
-    assert_equal %w[. .. .gitkeep empty.rb fake.rb list.rb ls_object.rb option.rb test], @lists.list_all
+    assert_equal %w[. .. .gitkeep bin empty.rb fake.rb lib test], @lists.list_all
   end
 
   def test_adjust
