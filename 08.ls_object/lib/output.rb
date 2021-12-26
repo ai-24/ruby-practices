@@ -6,7 +6,6 @@ require_relative 'content'
 require_relative 'list'
 
 class Output
-
   def print_long(files)
     content = Content.new
     puts("total #{content.calculate_block(files)}")

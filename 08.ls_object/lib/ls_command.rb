@@ -3,7 +3,6 @@
 require 'optparse'
 
 class LsCommand
-
   def save
     opt = OptionParser.new
     params = {}
