@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 require 'date'
-require_relative 'ls_command'
 
-class Content
-  def lists
-    LsCommand.new.option_a? ? Dir.glob(%w[.* *]) : Dir.glob('*')
+class FileInfo
+  def list
+    Dir.glob('*')
   end
 
-  def calculate_block(block)
-    block.each.sum { |b| File.lstat(b).blocks }
+  def list_all
+    Dir.glob(%w[.* *])
+  end
+
+  def calculate_block(files)
+    files.each.sum { |b| File.lstat(b).blocks }
   end
 
   def stamp(file)
