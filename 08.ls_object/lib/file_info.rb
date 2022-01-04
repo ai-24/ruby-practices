@@ -3,27 +3,19 @@
 require 'date'
 
 class FileInfo
-  def list
-    Dir.glob('*')
+  def initialize(file)
+    @file = file
   end
 
-  def list_all
-    Dir.glob(%w[.* *])
-  end
-
-  def calculate_block(files)
-    files.each.sum { |b| File.lstat(b).blocks }
-  end
-
-  def stamp(file)
-    renewed_time = File.lstat(file).mtime
+  def timestamp
+    renewed_time = File.lstat(@file).mtime
     file_date = Date.parse(renewed_time.strftime(' %b %e %H:%M %Y '))
     six_month_before = Date.today << 6
     file_date > six_month_before ? renewed_time.strftime(' %b %e %H:%M ') : renewed_time.strftime(' %b %e  %Y ')
   end
 
-  def authorize(file)
-    file_mode = File.lstat(file).mode.to_s(8).chars.last(3)
+  def authorize
+    file_mode = File.lstat(@file).mode.to_s(8).chars.last(3)
     file_modes = file_mode.map(&:to_i)
     file_modes.map do |m|
       {
@@ -38,16 +30,16 @@ class FileInfo
     end
   end
 
-  def classify(file)
-    { 'file' => '-', 'directory' => 'd', 'link' => 'l' }[File.ftype(file)]
+  def file_type
+    { 'file' => '-', 'directory' => 'd', 'link' => 'l' }[File.ftype(@file)]
   end
 
-  def derive(file)
-    if FileTest.symlink?(file)
-      link = File.readlink(file)
-      "#{file}@ -> #{link}"
+  def derive
+    if FileTest.symlink?(@file)
+      link = File.readlink(@file)
+      "#{@file}@ -> #{link}"
     else
-      file
+      @file
     end
   end
 end

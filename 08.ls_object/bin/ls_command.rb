@@ -4,35 +4,40 @@ require 'optparse'
 require_relative '../lib/file_list_generator'
 require_relative '../lib/long_formatter'
 require_relative '../lib/short_formatter'
-require_relative '../lib/file_info'
 
 class LsCommand
-  def save
+  def pick
+    list = option_a? ? FileListGenerator.list_all : FileListGenerator.list
+    sort = option_r? ? list.reverse : list
+    option_l? ? LongFormatter.new(sort).print_long : ShortFormatter.new(sort).display
+  end
+
+  private
+
+  def parse_options(options)
     opt = OptionParser.new
-    params = {}
-    opt.on('-a') { |v| params[:a] = v }
-    opt.on('-r') { |v| params[:r] = v }
-    opt.on('-l') { |v| params[:l] = v }
-    opt.parse(ARGV)
-    params
+    @parsed_options ||= {}
+    opt.on('-a') { |v| @parsed_options[:a] = v }
+    opt.on('-r') { |v| @parsed_options[:r] = v }
+    opt.on('-l') { |v| @parsed_options[:l] = v }
+    opt.parse(options)
+    @parsed_options
+  end
+
+  def options
+    ARGV
   end
 
   def option_a?
-    save[:a]
+    parse_options(options)[:a]
   end
 
   def option_r?
-    save[:r]
+    parse_options(options)[:r]
   end
 
   def option_l?
-    save[:l]
-  end
-
-  def pick
-    list = option_a? ? FileInfo.new.list_all : FileInfo.new.list
-    sort = option_r? ? list.reverse : list
-    option_l? ? LongFormatter.new.print_long(sort) : ShortFormatter.new.display(*FileListGenerator.new(sort).adjust)
+    parse_options(options)[:l]
   end
 end
 
