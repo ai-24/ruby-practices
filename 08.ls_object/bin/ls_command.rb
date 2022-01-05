@@ -6,7 +6,7 @@ require_relative '../lib/long_formatter'
 require_relative '../lib/short_formatter'
 
 class LsCommand
-  def pick
+  def run
     list = option_a? ? FileListGenerator.list_all : FileListGenerator.list
     sort = option_r? ? list.reverse : list
     option_l? ? LongFormatter.new(sort).print_long : ShortFormatter.new(sort).display
@@ -16,7 +16,7 @@ class LsCommand
 
   def parse_options(options)
     opt = OptionParser.new
-    @parsed_options ||= {}
+    @parsed_options = {}
     opt.on('-a') { |v| @parsed_options[:a] = v }
     opt.on('-r') { |v| @parsed_options[:r] = v }
     opt.on('-l') { |v| @parsed_options[:l] = v }
@@ -24,21 +24,21 @@ class LsCommand
     @parsed_options
   end
 
-  def options
-    ARGV
+  def parsed_options
+    @parsed_options ||= parse_options(ARGV)
   end
 
   def option_a?
-    parse_options(options)[:a]
+    parsed_options[:a]
   end
 
   def option_r?
-    parse_options(options)[:r]
+    parsed_options[:r]
   end
 
   def option_l?
-    parse_options(options)[:l]
+    parsed_options[:l]
   end
 end
 
-LsCommand.new.pick
+LsCommand.new.run
