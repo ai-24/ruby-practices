@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require './frame'
+require_relative '../frame'
 
 class FrameTest < Minitest::Test
-  def test_calculate
+  def test_frame_sum
     first_frame = Frame.new('1', '2')
-    assert_equal 3, first_frame.calculate
+    assert_equal 3, first_frame.frame_sum
 
-    second_frame = Frame.new('3', '4', 'X')
-    assert_equal 17, second_frame.calculate
+    second_frame = Frame.new('X', '0')
+    assert_equal 10, second_frame.frame_sum
   end
 end

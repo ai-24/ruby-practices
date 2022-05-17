@@ -1,11 +1,31 @@
 # frozen_string_literal: true
 
-require './frame'
+require_relative 'frame'
+require_relative 'shot'
 
-class Game < Frame
+class Game
+  ALL_PINS = 10
+  NINE_FRAME = 8
   def initialize(game)
     @game = game
   end
+
+  def final_calculate
+    frames.each_with_index.sum do |f, i|
+      basic_score = f.frame_sum
+      next_frame = frames[i.next]
+      if i > NINE_FRAME || basic_score < ALL_PINS
+        basic_score
+      elsif f.strike?
+        frame_point = basic_score + next_frame.frame_sum
+        next_frame.strike? ? frame_point + frames[i.next.next].first_shot.score : frame_point
+      elsif f.spare?
+        basic_score + next_frame.first_shot.score
+      end
+    end
+  end
+
+  private
 
   def split
     numbers = []
@@ -13,28 +33,8 @@ class Game < Frame
     numbers
   end
 
-  def frame
-    split.each_slice(2).to_a
-  end
-
-  def final_calcilate
-    frame.each_with_index.sum do |f, i|
-      basic_score = Frame.new(*f).calculate
-      if i > 8 || basic_score < 10
-        basic_score
-      elsif f[0] == 'X'
-        frame_point = basic_score + Frame.new(*frame[i.next]).calculate
-        if frame[i.next][0] == 'X'
-          frame_point + Frame.new(*frame[i.next.next]).first_shot.score
-        else
-          frame_point
-        end
-      elsif basic_score == 10
-        basic_score + Frame.new(*frame[i.next]).first_shot.score
-      end
-    end
+  def frames
+    frames = split.each_slice(2).to_a
+    frames.map { |frame| Frame.new(*frame) }
   end
 end
-
-g = Game.new(ARGV[0])
-puts g.final_calcilate

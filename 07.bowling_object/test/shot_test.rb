@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require './shot'
+require_relative '../shot'
 
 class ShotTest < Minitest::Test
   def test_score
